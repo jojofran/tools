@@ -1,0 +1,26 @@
+{
+  "name": "cc-connect-config-ui",
+  "version": "1.0.0",
+  "description": "Web UI for editing cc-connect configuration",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "electron": "electron .",
+    "setup": "node scripts/postinstall.js && node scripts/install-check.js",
+    "setup-env": "sh scripts/setup-env.sh --apply",
+    "check": "node scripts/install-check.js",
+    "check:fix": "node scripts/install-check.js --fix",
+    "postinstall": "node scripts/postinstall.js",
+    "dist": "electron-builder --publish never",
+    "dist-all": "electron-builder --publish never --universal"
+  },
+  "dependencies": {
+    "smol-toml": "^1.3.1"
+  },
+  "devDependencies": {
+    "electron": "^42.1.0",
+    "electron-builder": "^26.8.1"
+  }
+}

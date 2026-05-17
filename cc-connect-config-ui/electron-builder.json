@@ -1,0 +1,35 @@
+{
+  "appId": "com.cc-connect.config-ui",
+  "productName": "cc-connect Config",
+  "files": [
+    "main.js",
+    "server.js",
+    "index.html",
+    "node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "scripts",
+      "to": "scripts",
+      "filter": ["*.js", "*.sh"]
+    }
+  ],
+  "mac": {
+    "target": [
+      { "target": "dmg", "arch": ["x64", "arm64"] },
+      { "target": "zip", "arch": ["x64", "arm64"] }
+    ],
+    "category": "public.app-category.developer-tools",
+    "hardenedRuntime": false
+  },
+  "dmg": {
+    "sign": false,
+    "title": "cc-connect Config",
+    "iconSize": 80,
+    "contents": [
+      { "x": 410, "y": 220, "type": "link", "path": "/Applications" },
+      { "x": 130, "y": 220, "type": "file" }
+    ]
+  },
+  "publish": null
+}
