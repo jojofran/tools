@@ -235,6 +235,23 @@ async function onRequest(req, res) {
     return;
   }
 
+  if (pathname === "/api/pick-directory" && method === "POST") {
+    execFile("/usr/bin/osascript", [
+      "-e", 'tell app "System Events" to activate',
+      "-e", 'POSIX path of (choose folder with prompt "选择项目工作目录:")'
+    ], { timeout: 60000, encoding: "utf-8" }, (err, stdout) => {
+      if (err) return jsonRes(res, 200, { cancelled: true });
+      const dir = stdout.trim();
+      // Verify it exists
+      if (dir && fs.existsSync(dir)) {
+        jsonRes(res, 200, { path: dir });
+      } else {
+        jsonRes(res, 200, { cancelled: true });
+      }
+    });
+    return;
+  }
+
   // Setup wizard page — in standalone mode redirect to main page
   if (pathname === "/setup") {
     res.writeHead(302, { Location: "/" });

@@ -6,23 +6,29 @@
 <title>cc-connect Config</title>
 <style>
 :root {
-  --bg: #0d0d12;
-  --surface: #15151d;
-  --surface2: #1c1c28;
-  --border: #2a2a3e;
-  --text: #e2e2ef;
-  --text2: #9d9db5;
-  --accent: #7c6ef0;
-  --accent-hover: #9489f5;
-  --danger: #e5534b;
-  --danger-hover: #f06a62;
-  --success: #3fb950;
-  --warning: #d29922;
-  --radius: 8px;
-  --radius-sm: 4px;
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface2: #f9f9fb;
+  --border: #dcdce4;
+  --text: #1d1d1f;
+  --text2: #6e6e73;
+  --text3: #98989d;
+  --accent: #5e5ce6;
+  --accent-hover: #7b79f0;
+  --accent-bg: rgba(94,92,230,.08);
+  --danger: #d32f2f;
+  --danger-hover: #f44336;
+  --danger-bg: rgba(211,47,47,.06);
+  --success: #2e7d32;
+  --success-bg: rgba(46,125,50,.08);
+  --warning: #e65100;
+  --warning-bg: rgba(230,81,0,.06);
+  --radius: 10px;
+  --radius-sm: 6px;
   --font: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --mono: "SF Mono","Fira Code","Cascadia Code",monospace;
   --transition: .15s ease;
+  --shadow: 0 1px 3px rgba(0,0,0,.06);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;min-height:100vh}
@@ -34,8 +40,8 @@ a:hover{color:var(--accent-hover)}
 .header .logo{font-weight:700;font-size:16px;color:var(--accent)}
 .header .path{font-size:12px;color:var(--text2);font-family:var(--mono);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .header .status{font-size:12px;padding:3px 10px;border-radius:99px;display:inline-flex;align-items:center;gap:5px}
-.header .status.running{background:rgba(63,185,80,.15);color:var(--success)}
-.header .status.stopped{background:rgba(229,83,75,.15);color:var(--danger)}
+.header .status.running{background:var(--success-bg);color:var(--success)}
+.header .status.stopped{background:var(--danger-bg);color:var(--danger)}
 .header .status .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 .header .status.running .dot{background:var(--success)}
 .header .status.stopped .dot{background:var(--danger)}
@@ -45,12 +51,12 @@ a:hover{color:var(--accent-hover)}
 .btn-primary:hover:not(:disabled){background:var(--accent-hover)}
 .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
 .btn-danger:hover:not(:disabled){background:var(--danger);color:#fff}
-.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
-.btn-outline:hover:not(:disabled){background:var(--surface2)}
+.btn-outline{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover:not(:disabled){background:var(--surface2);border-color:var(--text3)}
 .btn-sm{padding:4px 10px;font-size:12px}
 .btn-success{background:var(--success);color:#fff}
-.btn-success:hover:not(:disabled){background:#46c95a}
-.btn-warning{background:transparent;color:var(--warning);border:1px solid var(--warning)}
+.btn-success:hover:not(:disabled){background:#388e3c}
+.btn-warning{color:var(--warning);border:1px solid var(--warning)}
 .btn-warning:hover:not(:disabled){background:var(--warning);color:#fff}
 .btn-group{display:flex;gap:6px}
 
@@ -74,11 +80,11 @@ h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)}
 .form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:180px}
 .form-group.full{width:100%;flex:none}
 .form-group label{font-size:12px;font-weight:500;color:var(--text2)}
-.form-group input,.form-group select,.form-group textarea{padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:var(--font);transition:border var(--transition)}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:var(--font);transition:border var(--transition)}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
 .form-group textarea{resize:vertical;min-height:60px;font-family:var(--mono);font-size:12px}
 .form-group select{cursor:pointer}
-.form-group input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+.form-group input[type="checkbox"]{width:18px;height:18px;min-width:18px;accent-color:var(--accent);cursor:pointer}
 .form-group .hint{font-size:11px;color:var(--text2)}
 .checkbox-row{display:flex;align-items:center;gap:8px;padding:4px 0}
 .checkbox-row label{font-size:13px;cursor:pointer}
@@ -111,8 +117,8 @@ h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)}
 /* Toast */
 .toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:var(--radius);z-index:9999;font-size:13px;font-weight:500;max-width:400px;animation:slideUp .3s ease;display:none}
 .toast.info{background:var(--surface2);border:1px solid var(--border);color:var(--text)}
-.toast.success{background:rgba(63,185,80,.15);border:1px solid var(--success);color:var(--success)}
-.toast.error{background:rgba(229,83,75,.15);border:1px solid var(--danger);color:var(--danger)}
+.toast.success{background:var(--success-bg);border:1px solid var(--success);color:var(--success)}
+.toast.error{background:var(--danger-bg);border:1px solid var(--danger);color:var(--danger)}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* Modal */
@@ -133,16 +139,56 @@ h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)}
 .project-card .project-body.open{display:block}
 
 /* Sub-cards for platforms */
-.platform-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;margin-top:8px}
-.platform-card .pc-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.platform-card .pc-header .ptype{font-weight:500;font-size:13px;flex:1}
+.platform-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;margin-top:8px;overflow:hidden}
+.platform-card .pc-header{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);border-bottom:1px solid var(--border)}
+.platform-card .pc-header .ptype{font-weight:500;font-size:13px;flex:1;text-transform:capitalize}
+.platform-card .pc-body{padding:12px}
+
+/* Template bar */
+.template-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--accent-bg);border:1px dashed var(--accent);border-radius:var(--radius-sm);margin-bottom:12px;font-size:13px;flex-wrap:wrap}
+.template-bar span{color:var(--accent);white-space:nowrap;font-weight:500}
+.tpl-sel{padding:4px 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:12px;cursor:pointer}
+.tpl-sel:focus{outline:none;border-color:var(--accent)}
+
+/* Field groups */
+.field-group{margin-bottom:12px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+.field-group:last-child{margin-bottom:0}
+.field-group-header{display:flex;align-items:center;padding:6px 10px;background:var(--surface);font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;user-select:none;cursor:default}
+.field-group-header[onclick]{cursor:pointer}
+.field-group-header[onclick]:hover{color:var(--text)}
+.fg-arrow{font-size:10px;margin-left:4px}
+.field-group-body{padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.field-group-body.collapsed{display:none}
+
+/* Toggle switch */
+.toggle-row{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;user-select:none}
+.toggle-row input{position:absolute;opacity:0;pointer-events:none}
+.toggle-slider{width:32px;height:18px;background:var(--surface);border:1px solid var(--border);border-radius:9px;position:relative;transition:background .15s, border-color .15s;flex-shrink:0}
+.toggle-slider::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;background:var(--text2);border-radius:50%;transition:transform .15s, background .15s}
+.toggle-row input:checked + .toggle-slider{background:var(--accent-bg);border-color:var(--accent)}
+.toggle-row input:checked + .toggle-slider::after{transform:translateX(14px);background:var(--accent)}
+.toggle-row span:last-child{color:var(--text2);font-size:12px}
 
 /* Tab content within forms */
 .form-section{border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;background:var(--surface)}
 .form-section .fs-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 
+/* Path picker */
+.path-picker{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:14px}
+.path-picker.empty{border-color:var(--warning);background:var(--warning-bg)}
+.path-picker-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.path-picker.empty .path-picker-label{color:var(--warning)}
+.path-picker-row{display:flex;gap:8px}
+.path-picker-row input{padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:var(--mono);flex:1;min-width:0}
+.path-picker.empty input{border-color:var(--warning)}
+.path-picker-row input:focus{outline:none;border-color:var(--accent)}
+
+/* Form grid */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.form-grid .form-group.full{grid-column:1/-1}
+
 /* Dirty indicator */
-.dirty-badge{font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(210,153,34,.2);color:var(--warning);display:none}
+.dirty-badge{font-size:11px;padding:2px 8px;border-radius:99px;background:var(--warning-bg);color:var(--warning);display:none}
 .dirty-badge.show{display:inline-flex}
 
 /* Raw TOML tab */
@@ -177,6 +223,7 @@ h3{font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)}
   <span class="status" id="daemonStatus"><span class="dot"></span><span id="statusText">Unknown</span></span>
   <span class="dirty-badge" id="dirtyBadge">未保存</span>
   <div class="btn-group">
+    <button class="btn btn-outline" id="cancelBtn" onclick="discardChanges()" style="display:none">取消</button>
     <button class="btn btn-primary" id="saveBtn" onclick="saveConfig()">保存</button>
     <button class="btn btn-danger" id="restartBtn" onclick="confirmRestart()">重启</button>
   </div>
@@ -442,12 +489,22 @@ function markDirty() {
   if (!dirty) {
     dirty = true;
     $("dirtyBadge").classList.add("show");
+    $("cancelBtn").style.display = '';
   }
 }
 
 function cleanDirty() {
   dirty = false;
   $("dirtyBadge").classList.remove("show");
+  $("cancelBtn").style.display = 'none';
+}
+
+async function discardChanges() {
+  await loadConfig();
+  await loadState();
+  renderFeishuTemplates();
+  renderUserGroupTemplates();
+  toast("已恢复原始配置", "info");
 }
 
 function uuid() {
@@ -883,6 +940,7 @@ function renderProjectCard(p, idx) {
   const agentOpts = agent.options || {};
   const platforms = p.platforms || [];
   const agentProviders = agent.providers || [];
+  const hasWorkDir = !!agentOpts.work_dir;
 
   const agentTypes = ["claudecode","codex","cursor","gemini","qoder","opencode","iflow","kimi","acp"];
   const modes = ["default","auto","plan","acceptEdits","bypassPermissions","dontAsk","suggest","auto-edit","full-auto","yolo","force","ask","quiet"];
@@ -899,78 +957,111 @@ function renderProjectCard(p, idx) {
       </div>
     </div>
     <div class="project-body open">
-      <div class="form-section">
-        <div class="fs-title">基本信息</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>项目名称</label>
-            <div class="f-projname"><input value="${escHtml(p.name || "")}" onchange="markDirty()"></div>
+
+      <!-- Work Directory — prominent -->
+      <div class="path-picker${hasWorkDir ? '' : ' empty'}" id="path-picker-${id}">
+        <div class="path-picker-label">工作目录${hasWorkDir ? '' : ' — 请先选择项目路径'}</div>
+        <div class="path-picker-row">
+          <div class="f-workdir" style="flex:1">
+            <input value="${escHtml(agentOpts.work_dir||"")}" placeholder="选择或输入项目目录..." onchange="markDirty();updatePathPicker('${id}')">
           </div>
-          <div class="form-group">
-            <label>admin_from</label>
-            <div class="f-adminfrom"><input value="${escHtml(p.admin_from || "")}" placeholder="用户open_id或*" onchange="markDirty()"></div>
-          </div>
-          <div class="form-group">
-            <label>禁用命令</label>
-            <div class="f-disabledcmds"><input value="${escHtml((p.disabled_commands||[]).join(", "))}" placeholder="逗号分隔" onchange="markDirty()"></div>
-          </div>
+          <button class="btn btn-outline btn-sm" onclick="chooseDirectory('${id}')">选择路径...</button>
         </div>
       </div>
 
-      <div class="form-section">
-        <div class="fs-title">Agent</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>类型</label>
-            <div class="f-agenttype"><select onchange="markDirty()">${agentTypes.map(t => `<option value="${t}"${agent.type===t?" selected":""}>${t}</option>`).join("")}</select></div>
-          </div>
-          <div class="form-group">
-            <label>work_dir</label>
-            <div class="f-workdir"><input value="${escHtml(agentOpts.work_dir||"")}" placeholder="工作目录" onchange="markDirty()"></div>
-          </div>
-          <div class="form-group">
-            <label>mode</label>
-            <div class="f-mode"><select onchange="markDirty()"><option value="">Default</option>${modes.map(m => `<option value="${m}"${agentOpts.mode===m?" selected":""}>${m}</option>`).join("")}</select></div>
-          </div>
-          <div class="form-group">
-            <label>model</label>
-            <div class="f-model"><input value="${escHtml(agentOpts.model||"")}" placeholder="模型名" onchange="markDirty()"></div>
-          </div>
-          <div class="form-group">
-            <label>reasoning_effort</label>
-            <div class="f-reasoning"><select onchange="markDirty()"><option value="">Default</option>${reasoningEfforts.map(r => `<option value="${r}"${agentOpts.reasoning_effort===r?" selected":""}>${r||"none"}</option>`).join("")}</select></div>
-          </div>
-          <div class="form-group">
-            <label>timeout (min)</label>
-            <div class="f-timeout"><input type="number" value="${agentOpts.timeout_mins||""}" onchange="markDirty()"></div>
-          </div>
-          <div class="form-group">
-            <label>cmd (binary override)</label>
-            <div class="f-cmd"><input value="${escHtml(agentOpts.cmd||"")}" placeholder="如: claude" onchange="markDirty()"></div>
-          </div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>项目名称</label>
+          <div class="f-projname"><input value="${escHtml(p.name || "")}" onchange="markDirty()"></div>
         </div>
-
-        <!-- Per-project providers -->
-        <div style="margin-top:12px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-            <span style="font-size:13px;font-weight:500;color:var(--text2)">Agent Providers</span>
-            <button class="btn btn-outline btn-sm" onclick="addAgentProvider(this)">+</button>
-          </div>
-          <div class="agent-providers-list">
-            ${agentProviders.map((ap, i) => renderAgentProviderCard(ap, i)).join("")}
-          </div>
+        <div class="form-group">
+          <label>Agent 类型</label>
+          <div class="f-agenttype"><select onchange="markDirty()">${agentTypes.map(t => `<option value="${t}"${agent.type===t?" selected":""}>${t}</option>`).join("")}</select></div>
+        </div>
+        <div class="form-group">
+          <label>Mode</label>
+          <div class="f-mode"><select onchange="markDirty()"><option value="">Default</option>${modes.map(m => `<option value="${m}"${agentOpts.mode===m?" selected":""}>${m}</option>`).join("")}</select></div>
+        </div>
+        <div class="form-group">
+          <label>Model</label>
+          <div class="f-model"><input value="${escHtml(agentOpts.model||"")}" placeholder="模型名" onchange="markDirty()"></div>
+        </div>
+        <div class="form-group">
+          <label>Reasoning</label>
+          <div class="f-reasoning"><select onchange="markDirty()"><option value="">Default</option>${reasoningEfforts.map(r => `<option value="${r}"${agentOpts.reasoning_effort===r?" selected":""}>${r||"none"}</option>`).join("")}</select></div>
+        </div>
+        <div class="form-group">
+          <label>Timeout (min)</label>
+          <div class="f-timeout"><input type="number" value="${agentOpts.timeout_mins||""}" onchange="markDirty()"></div>
+        </div>
+        <div class="form-group">
+          <label>Binary (可选)</label>
+          <div class="f-cmd"><input value="${escHtml(agentOpts.cmd||"")}" placeholder="如: claude" onchange="markDirty()"></div>
+        </div>
+        <div class="form-group">
+          <label>Admin From</label>
+          <div class="f-adminfrom"><input value="${escHtml(p.admin_from || "")}" placeholder="open_id 或 *" onchange="markDirty()"></div>
+        </div>
+        <div class="form-group">
+          <label>禁用命令（逗号分隔）</label>
+          <div class="f-disabledcmds"><input value="${escHtml((p.disabled_commands||[]).join(", "))}" placeholder="命令名列表" onchange="markDirty()"></div>
         </div>
       </div>
 
-      <div class="form-section">
-        <div class="fs-title">Platforms</div>
+      <!-- Agent Providers -->
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">Providers</span>
+          <button class="btn btn-outline btn-sm" onclick="addAgentProvider(this)">+</button>
+        </div>
+        <div class="agent-providers-list">
+          ${agentProviders.map((ap, i) => renderAgentProviderCard(ap, i)).join("")}
+        </div>
+      </div>
+
+      <!-- Platforms -->
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">Platforms</span>
+        </div>
         <div class="platforms-list">
           ${platforms.map((pl, i) => renderPlatformCard(pl, i)).join("")}
         </div>
         <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="addPlatform(this)">+ 添加平台</button>
       </div>
+
     </div>
   </div>`;
+}
+
+function updatePathPicker(projId) {
+  const picker = document.getElementById('path-picker-' + projId);
+  if (!picker) return;
+  const input = picker.querySelector('input');
+  if (input && input.value.trim()) {
+    picker.classList.remove('empty');
+    picker.querySelector('.path-picker-label').textContent = '工作目录';
+  } else {
+    picker.classList.add('empty');
+    picker.querySelector('.path-picker-label').textContent = '工作目录 — 请先选择项目路径';
+  }
+}
+
+async function chooseDirectory(projId) {
+  try {
+    const r = await fetch('/api/pick-directory', { method: 'POST' });
+    const data = await r.json();
+    if (data.path) {
+      const picker = document.getElementById('path-picker-' + projId);
+      if (picker) {
+        picker.querySelector('input').value = data.path;
+        updatePathPicker(projId);
+        markDirty();
+      }
+    }
+  } catch(e) {
+    // user cancelled
+  }
 }
 
 function toggleProject(header) {
@@ -1002,91 +1093,94 @@ function addProject() {
 // ============================================================
 const PLATFORM_TYPES = ["feishu","lark","dingtalk","telegram","slack","discord","line","wecom","weixin","qq","qqbot","weibo"];
 
+// group: 'auth' | 'permissions' | 'behavior' | 'advanced'
 const PLATFORM_OPTIONS = {
   feishu: [
-    { key: "app_id", label: "App ID", type: "text" },
-    { key: "app_secret", label: "App Secret", type: "text" },
-    { key: "domain", label: "Domain (override)", type: "text" },
-    { key: "enable_feishu_card", label: "Enable Cards", type: "checkbox" },
-    { key: "group_reply_all", label: "Group Reply All", type: "checkbox" },
-    { key: "share_session_in_channel", label: "Shared Session", type: "checkbox" },
-    { key: "thread_isolation", label: "Thread Isolation", type: "checkbox" },
-    { key: "allow_from", label: "allow_from", type: "text" },
-    { key: "reaction_emoji", label: "Reaction Emoji", type: "text" },
-    { key: "progress_style", label: "Progress Style", type: "select", options: ["legacy","compact","card"] },
-    { key: "resolve_mentions", label: "Resolve Mentions", type: "checkbox" },
+    { key: "app_id", label: "App ID", type: "text", group: "auth" },
+    { key: "app_secret", label: "App Secret", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "enable_feishu_card", label: "飞书卡片", type: "checkbox", group: "behavior" },
+    { key: "group_reply_all", label: "群内 @ 回复所有人", type: "checkbox", group: "behavior" },
+    { key: "share_session_in_channel", label: "群内共享会话", type: "checkbox", group: "behavior" },
+    { key: "thread_isolation", label: "话题隔离", type: "checkbox", group: "behavior" },
+    { key: "resolve_mentions", label: "解析 @ 提及", type: "checkbox", group: "behavior" },
+    { key: "progress_style", label: "进度展示风格", type: "select", options: ["legacy","compact","card"], group: "advanced" },
+    { key: "reaction_emoji", label: "Reaction Emoji", type: "text", group: "advanced" },
+    { key: "domain", label: "Domain (override)", type: "text", group: "advanced" },
   ],
   lark: [
-    { key: "app_id", label: "App ID", type: "text" },
-    { key: "app_secret", label: "App Secret", type: "text" },
-    { key: "port", label: "Webhook Port", type: "number" },
-    { key: "callback_path", label: "Callback Path", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
+    { key: "app_id", label: "App ID", type: "text", group: "auth" },
+    { key: "app_secret", label: "App Secret", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "port", label: "Webhook Port", type: "number", group: "advanced" },
+    { key: "callback_path", label: "Callback Path", type: "text", group: "advanced" },
   ],
   telegram: [
-    { key: "token", label: "Bot Token", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
-    { key: "group_reply_all", label: "Group Reply All", type: "checkbox" },
-    { key: "share_session_in_channel", label: "Shared Session", type: "checkbox" },
-    { key: "enable_reactions", label: "Enable Reactions", type: "checkbox" },
+    { key: "token", label: "Bot Token", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "group_reply_all", label: "群内 @ 回复所有人", type: "checkbox", group: "behavior" },
+    { key: "share_session_in_channel", label: "群内共享会话", type: "checkbox", group: "behavior" },
+    { key: "enable_reactions", label: "启用 Reaction", type: "checkbox", group: "behavior" },
   ],
   discord: [
-    { key: "token", label: "Bot Token", type: "text" },
-    { key: "guild_id", label: "Guild ID", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
-    { key: "group_reply_all", label: "Group Reply All", type: "checkbox" },
-    { key: "share_session_in_channel", label: "Shared Session", type: "checkbox" },
-    { key: "thread_isolation", label: "Thread Isolation", type: "checkbox" },
-    { key: "progress_style", label: "Progress Style", type: "select", options: ["legacy","compact","card"] },
+    { key: "token", label: "Bot Token", type: "text", group: "auth" },
+    { key: "guild_id", label: "Guild ID", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "group_reply_all", label: "群内 @ 回复所有人", type: "checkbox", group: "behavior" },
+    { key: "share_session_in_channel", label: "群内共享会话", type: "checkbox", group: "behavior" },
+    { key: "thread_isolation", label: "话题隔离", type: "checkbox", group: "behavior" },
+    { key: "progress_style", label: "进度展示风格", type: "select", options: ["legacy","compact","card"], group: "advanced" },
   ],
   slack: [
-    { key: "bot_token", label: "Bot Token (xoxb-)", type: "text" },
-    { key: "app_token", label: "App Token (xapp-)", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
-    { key: "share_session_in_channel", label: "Shared Session", type: "checkbox" },
+    { key: "bot_token", label: "Bot Token (xoxb-)", type: "text", group: "auth" },
+    { key: "app_token", label: "App Token (xapp-)", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "share_session_in_channel", label: "群内共享会话", type: "checkbox", group: "behavior" },
   ],
   dingtalk: [
-    { key: "client_id", label: "Client ID (AppKey)", type: "text" },
-    { key: "client_secret", label: "Client Secret (AppSecret)", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
-    { key: "share_session_in_channel", label: "Shared Session", type: "checkbox" },
+    { key: "client_id", label: "Client ID (AppKey)", type: "text", group: "auth" },
+    { key: "client_secret", label: "Client Secret (AppSecret)", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "share_session_in_channel", label: "群内共享会话", type: "checkbox", group: "behavior" },
   ],
   wecom: [
-    { key: "corp_id", label: "Corp ID", type: "text" },
-    { key: "corp_secret", label: "Corp Secret", type: "text" },
-    { key: "agent_id", label: "Agent ID", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
-    { key: "enable_markdown", label: "Enable Markdown", type: "checkbox" },
+    { key: "corp_id", label: "Corp ID", type: "text", group: "auth" },
+    { key: "corp_secret", label: "Corp Secret", type: "text", group: "auth" },
+    { key: "agent_id", label: "Agent ID", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "enable_markdown", label: "启用 Markdown", type: "checkbox", group: "behavior" },
   ],
   line: [
-    { key: "channel_secret", label: "Channel Secret", type: "text" },
-    { key: "channel_token", label: "Channel Token", type: "text" },
-    { key: "port", label: "Webhook Port", type: "number" },
-    { key: "allow_from", label: "allow_from", type: "text" },
+    { key: "channel_secret", label: "Channel Secret", type: "text", group: "auth" },
+    { key: "channel_token", label: "Channel Token", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "port", label: "Webhook Port", type: "number", group: "advanced" },
   ],
   weixin: [
-    { key: "token", label: "Bearer Token", type: "text" },
-    { key: "base_url", label: "Base URL", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
+    { key: "token", label: "Bearer Token", type: "text", group: "auth" },
+    { key: "base_url", label: "Base URL", type: "text", group: "advanced" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
   ],
   qq: [
-    { key: "ws_url", label: "WebSocket URL", type: "text" },
-    { key: "token", label: "Auth Token", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
+    { key: "ws_url", label: "WebSocket URL", type: "text", group: "auth" },
+    { key: "token", label: "Auth Token", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
   ],
   qqbot: [
-    { key: "app_id", label: "App ID", type: "text" },
-    { key: "app_secret", label: "App Secret", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
-    { key: "sandbox", label: "Sandbox", type: "checkbox" },
-    { key: "markdown_support", label: "Markdown", type: "checkbox" },
+    { key: "app_id", label: "App ID", type: "text", group: "auth" },
+    { key: "app_secret", label: "App Secret", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
+    { key: "sandbox", label: "沙箱模式", type: "checkbox", group: "behavior" },
+    { key: "markdown_support", label: "Markdown 支持", type: "checkbox", group: "behavior" },
   ],
   weibo: [
-    { key: "app_id", label: "App ID", type: "text" },
-    { key: "app_secret", label: "App Secret", type: "text" },
-    { key: "allow_from", label: "allow_from", type: "text" },
+    { key: "app_id", label: "App ID", type: "text", group: "auth" },
+    { key: "app_secret", label: "App Secret", type: "text", group: "auth" },
+    { key: "allow_from", label: "允许的用户/群组 ID（逗号分隔）", type: "text", group: "permissions" },
   ],
 };
+
+const GROUP_LABELS = { auth: "认证", permissions: "权限", behavior: "行为", advanced: "高级" };
 
 function renderPlatformCard(pl, idx) {
   const id = "plat_" + (pl._uid || uuid());
@@ -1095,7 +1189,6 @@ function renderPlatformCard(pl, idx) {
   const pt = pl.type || "feishu";
   const fields = PLATFORM_OPTIONS[pt] || PLATFORM_OPTIONS.feishu;
 
-  // Build template selectors
   const feishuAppOpts = (uiState.feishuAppTemplates || []).map(t =>
     `<option value="${escHtml(t.name)}">${escHtml(t.name)}</option>`
   ).join("");
@@ -1103,10 +1196,59 @@ function renderPlatformCard(pl, idx) {
     `<option value="${escHtml(t.name)}">${escHtml(t.name)}</option>`
   ).join("");
 
+  // Group fields
+  const groups = { auth: [], permissions: [], behavior: [], advanced: [] };
+  for (const f of fields) {
+    const g = f.group || 'auth';
+    if (groups[g]) groups[g].push(f);
+  }
+
+  const hasTemplates = feishuAppOpts || userGroupOpts;
+
+  // Render template bar
+  let templateBar = '';
+  if (hasTemplates) {
+    templateBar = `<div class="template-bar">
+      <span>📋 快速填入：</span>`;
+    if (feishuAppOpts) {
+      templateBar += `<select onchange="applyFeishuTemplate(this,'${id}')" class="tpl-sel">
+        <option value="">飞书应用模板...</option>
+        ${feishuAppOpts}
+      </select>`;
+    }
+    if (userGroupOpts) {
+      templateBar += `<select onchange="applyUserGroupTemplate(this,'${id}')" class="tpl-sel">
+        <option value="">用户组模板...</option>
+        ${userGroupOpts}
+      </select>`;
+    }
+    templateBar += `</div>`;
+  }
+
+  // Render field groups
+  let fieldsHtml = '';
+  const groupOrder = ['auth', 'permissions', 'behavior', 'advanced'];
+  for (const g of groupOrder) {
+    const gFields = groups[g];
+    if (!gFields || gFields.length === 0) continue;
+    const isAdvanced = g === 'advanced';
+    const collapsedClass = isAdvanced ? 'collapsed' : '';
+    const bodyStyle = isAdvanced ? 'display:none' : '';
+    fieldsHtml += `<div class="field-group">
+      <div class="field-group-header" onclick="${isAdvanced ? `toggleFieldGroup(this)` : ''}">
+        <span>${GROUP_LABELS[g]}</span>`;
+    if (isAdvanced) fieldsHtml += `<span class="fg-arrow" data-arrow>▶</span>`;
+    fieldsHtml += `</div>
+      <div class="field-group-body ${collapsedClass}" style="${bodyStyle}${g === 'behavior' || g === 'permissions' ? 'grid-template-columns:1fr' : ''}">
+        ${gFields.map(f => renderPlatformField(f, opts, g)).join("")}
+      </div>
+    </div>`;
+  }
+
   return `
   <div class="platform-card" data-plat-id="${id}">
     <div class="pc-header">
-      <span class="ptype">Platform #${idx + 1}</span>
+      <span class="ptype">${escHtml(pt)} #${idx + 1}</span>
       <div class="f-plat-type">
         <select onchange="changePlatformType(this);markDirty()">
           ${PLATFORM_TYPES.map(t => `<option value="${t}"${pt===t?" selected":""}>${t}</option>`).join("")}
@@ -1115,43 +1257,37 @@ function renderPlatformCard(pl, idx) {
       <button class="btn btn-danger btn-sm" onclick="removePlatform(this)">删除</button>
     </div>
     <div class="pc-body">
-      ${feishuAppOpts ? `
-      <div class="form-row">
-        <div class="form-group">
-          <label>套用飞书模板</label>
-          <select onchange="applyFeishuTemplate(this, '${id}')">
-            <option value="">—— 不套用 ——</option>
-            ${feishuAppOpts}
-          </select>
-        </div>
-      </div>` : ""}
-      ${userGroupOpts ? `
-      <div class="form-row">
-        <div class="form-group">
-          <label>套用用户组模板</label>
-          <select onchange="applyUserGroupTemplate(this, '${id}')">
-            <option value="">—— 不套用 ——</option>
-            ${userGroupOpts}
-          </select>
-        </div>
-      </div>` : ""}
-      <div class="form-row platform-fields" data-platform="${pt}">
-        ${fields.map(f => renderPlatformField(f, opts)).join("")}
-      </div>
+      ${templateBar}
+      ${fieldsHtml}
     </div>
   </div>`;
 }
 
-function renderPlatformField(f, opts) {
+function toggleFieldGroup(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('[data-arrow]');
+  const isCollapsed = body.classList.contains('collapsed');
+  if (isCollapsed) {
+    body.classList.remove('collapsed');
+    body.style.display = '';
+    if (arrow) arrow.textContent = '▼';
+  } else {
+    body.classList.add('collapsed');
+    body.style.display = 'none';
+    if (arrow) arrow.textContent = '▶';
+  }
+}
+
+function renderPlatformField(f, opts, group) {
   const val = opts[f.key];
-  // Convert arrays to comma-separated string for display
   const displayVal = Array.isArray(val) ? val.join(", ") : (val || "");
   if (f.type === "checkbox") {
     const checked = val === true || val === "true" ? "checked" : "";
-    return `<div class="form-group" style="min-width:120px">
-      <label>${escHtml(f.label)}</label>
-      <div class="checkbox-row"><input type="checkbox" data-popt="${f.key}" ${checked} onchange="markDirty()"></div>
-    </div>`;
+    return `<label class="toggle-row">
+      <input type="checkbox" data-popt="${f.key}" ${checked} onchange="markDirty()">
+      <span class="toggle-slider"></span>
+      <span>${escHtml(f.label)}</span>
+    </label>`;
   }
   if (f.type === "select") {
     const options = (f.options||[]).map(o => `<option value="${o}"${val===o?" selected":""}>${o}</option>`).join("");
