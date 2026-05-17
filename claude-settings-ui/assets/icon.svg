@@ -4,13 +4,10 @@
       <stop offset="0%" stop-color="#6B4BFF"/>
       <stop offset="100%" stop-color="#8B6BFF"/>
     </linearGradient>
-    <clipPath id="roundedSquare">
-      <rect width="512" height="512" rx="112"/>
-    </clipPath>
   </defs>
 
-  <!-- Background -->
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- Full-bleed background (macOS applies its own corner mask) -->
+  <rect width="512" height="512" fill="url(#bg)"/>
 
   <!-- Gear outer ring -->
   <circle cx="256" cy="256" r="100" fill="none" stroke="white" stroke-width="4" opacity="0.15"/>
