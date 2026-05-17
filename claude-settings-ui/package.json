@@ -1,0 +1,20 @@
+{
+  "name": "claude-settings-ui",
+  "version": "1.0.0",
+  "description": "Web UI for editing Claude CLI ~/.claude/settings.json",
+  "author": "Claude",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "electron": "electron .",
+    "electron-dev": "electron . --inspect=9222",
+    "dist": "electron-builder --publish never",
+    "dist-all": "electron-builder --publish never"
+  },
+  "devDependencies": {
+    "electron": "^42.0.1",
+    "electron-builder": "^26.8.1"
+  }
+}

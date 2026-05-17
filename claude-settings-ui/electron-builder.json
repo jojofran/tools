@@ -1,0 +1,32 @@
+{
+  "appId": "com.claude.settings-ui",
+  "productName": "Claude Settings",
+  "files": [
+    "main.js",
+    "server.js",
+    "index.html",
+    "node_modules/**/*"
+  ],
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      },
+      {
+        "target": "zip",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      }
+    ],
+    "category": "public.app-category.utilities"
+  },
+  "dmg": {
+    "sign": false
+  }
+}

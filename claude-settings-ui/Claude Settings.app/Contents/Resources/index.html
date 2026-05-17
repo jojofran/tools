@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Settings</title>
+<style>
+  :root {
+    --bg: #0d0d12;
+    --surface: #15151d;
+    --surface2: #1c1c28;
+    --surface3: #252536;
+    --border: #2a2a3e;
+    --text: #e4e4ec;
+    --text2: #9898b4;
+    --accent: #7c6ef0;
+    --accent-hover: #9488f5;
+    --green: #46c98a;
+    --red: #f06565;
+    --orange: #f0a065;
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    --mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .logo-sub {
+    font-size: 13px;
+    color: var(--text2);
+    -webkit-text-fill-color: var(--text2);
+  }
+
+  .file-path {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--text2);
+    background: var(--surface2);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .status-dot.dirty { background: var(--orange); }
+  .status-dot.error { background: var(--red); }
+  .status-dot.saving { background: var(--accent); animation: pulse 0.8s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--surface3); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+  }
+  .btn-danger:hover { background: rgba(240,101,101,0.1); }
+
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+
+  .tab {
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: auto;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Form elements */
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--text);
+  }
+
+  .form-group .hint {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 3px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--mono);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--accent);
+  }
+
+  select { font-family: var(--font); cursor: pointer; }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  .checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  /* Inline form layout */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Permissions / Array editor */
+  .array-editor {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .array-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .array-item:last-child { border-bottom: none; }
+
+  .array-item .rule-text {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 4px 8px;
+    background: var(--surface3);
+    border-radius: 4px;
+    color: var(--text);
+  }
+
+  .array-item .remove-btn {
+    background: none;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .array-item .remove-btn:hover { background: rgba(240,101,101,0.15); }
+
+  .array-add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .array-add-row input { flex: 1; }
+
+  .array-add-row .btn { padding: 6px 14px; }
+
+  .array-empty {
+    font-size: 13px;
+    color: var(--text2);
+    padding: 8px 0;
+    font-style: italic;
+  }
+
+  /* Key-Value editor */
+  .kv-editor { margin-bottom: 14px; }
+
+  .kv-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .kv-row input:first-child { flex: 0 0 200px; }
+  .kv-row input:last-child { flex: 1; }
+
+  .kv-row .remove-btn {
+    flex: 0 0 30px;
+    background: none;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 2px;
+  }
+
+  /* MCP / Hooks editor */
+  .object-editor {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .object-item {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .object-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--surface3);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .object-header .key-input {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 4px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+  }
+
+  .object-body {
+    padding: 12px;
+    display: none;
+  }
+
+  .object-body.open { display: block; }
+
+  .object-body .form-group { margin-bottom: 12px; }
+  .object-body .form-group:last-child { margin-bottom: 0; }
+
+  .object-body label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .object-body input,
+  .object-body textarea { font-size: 12px; padding: 6px 10px; }
+
+  .object-body .array-item .rule-text { font-size: 11px; }
+
+  /* Raw JSON tab */
+  .json-editor {
+    width: 100%;
+    min-height: 500px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    resize: vertical;
+    outline: none;
+  }
+
+  .json-editor:focus { border-color: var(--accent); }
+
+  .json-error {
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 6px;
+    font-family: var(--mono);
+  }
+
+  /* Toast notifications */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .toast-success { background: #1a3a2a; color: var(--green); border: 1px solid var(--green); }
+  .toast-error { background: #3a1a1a; color: var(--red); border: 1px solid var(--red); }
+
+  /* Collapsible sections */
+  .collapsible {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .collapsible-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface2);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .collapsible-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .collapsible-header .arrow {
+    transition: transform 0.2s;
+    color: var(--text2);
+  }
+
+  .collapsible-header .arrow.open { transform: rotate(90deg); }
+
+  .collapsible-body { padding: 16px; display: none; }
+  .collapsible-body.open { display: block; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header { flex-direction: column; gap: 10px; align-items: flex-start; }
+    .form-row, .form-row-3 { grid-template-columns: 1fr; }
+    .tabs { padding: 0 16px; }
+    .main { padding: 16px; }
+  }
+
+  /* Add rule input group */
+  .rule-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .rule-presets .preset-chip {
+    font-size: 11px;
+    padding: 3px 8px;
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text2);
+    font-family: var(--mono);
+    transition: all 0.1s;
+  }
+
+  .rule-presets .preset-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  /* Stats row in header */
+  .stat-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--surface3);
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="logo">Claude <span class="logo-sub">Settings</span></span>
+    <span class="file-path" id="filePath">~/.claude/settings.json</span>
+    <span class="stat-badge" id="sizeBadge"></span>
+  </div>
+  <div class="header-right">
+    <span class="status" id="status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Loaded</span>
+    </span>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveSettings()">Save</button>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" data-tab="general">General</div>
+  <div class="tab" data-tab="model">Model</div>
+  <div class="tab" data-tab="permissions">Permissions</div>
+  <div class="tab" data-tab="env">Environment</div>
+  <div class="tab" data-tab="hooks">Hooks</div>
+  <div class="tab" data-tab="mcp">MCP Servers</div>
+  <div class="tab" data-tab="advanced">Advanced</div>
+  <div class="tab" data-tab="raw">Raw JSON</div>
+</div>
+
+<div class="main" id="main">
+
+<!-- === GENERAL === -->
+<div class="tab-content active" id="tab-general">
+  <h2 class="section-title">General Settings</h2>
+  <p class="section-desc">Core Claude CLI behavior and appearance</p>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="model">Default Model</label>
+      <select id="model">
+        <option value="">Default</option>
+        <option value="sonnet">Sonnet</option>
+        <option value="opus">Opus</option>
+        <option value="haiku">Haiku</option>
+      </select>
+      <div class="hint">Override default model. Accepts aliases or full model IDs.</div>
+    </div>
+    <div class="form-group">
+      <label for="language">Language</label>
+      <select id="language">
+        <option value="english">English</option>
+        <option value="chinese">Chinese</option>
+        <option value="japanese">Japanese</option>
+        <option value="korean">Korean</option>
+        <option value="spanish">Spanish</option>
+        <option value="french">French</option>
+        <option value="german">German</option>
+      </select>
+      <div class="hint">Preferred response language from Claude</div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="agent">Default Agent</label>
+      <input type="text" id="agent" placeholder="e.g. my-agent">
+      <div class="hint">Default agent name from .claude/agents/</div>
+    </div>
+    <div class="form-group">
+      <label for="defaultShell">Default Shell</label>
+      <select id="defaultShell">
+        <option value="bash">bash</option>
+        <option value="powershell">powershell</option>
+      </select>
+      <div class="hint">Default shell for ! commands</div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="autoUpdatesChannel">Update Channel</label>
+      <select id="autoUpdatesChannel">
+        <option value="latest">latest (bleeding edge)</option>
+        <option value="stable">stable</option>
+      </select>
+      <div class="hint">Release channel for auto-updates</div>
+    </div>
+    <div class="form-group">
+      <label for="cleanupPeriodDays">Cleanup Period (days)</label>
+      <input type="number" id="cleanupPeriodDays" min="1" step="1" placeholder="30">
+      <div class="hint">Auto-delete old transcripts, worktrees, tasks older than N days</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="viewMode">View Mode</label>
+    <select id="viewMode">
+      <option value="">Default</option>
+      <option value="verbose">Verbose</option>
+      <option value="focus">Focus</option>
+    </select>
+    <div class="hint">Transcript view mode</div>
+  </div>
+
+  <div class="form-row">
+    <div class="checkbox-row">
+      <input type="checkbox" id="alwaysThinkingEnabled">
+      <label for="alwaysThinkingEnabled">Enable extended thinking by default</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="skipWebFetchPreflight">
+      <label for="skipWebFetchPreflight">Skip WebFetch preflight checks</label>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="checkbox-row">
+      <input type="checkbox" id="includeGitInstructions">
+      <label for="includeGitInstructions">Include git instructions in system prompt</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="showTurnDuration">
+      <label for="showTurnDuration">Show turn duration</label>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="checkbox-row">
+      <input type="checkbox" id="showThinkingSummaries">
+      <label for="showThinkingSummaries">Show thinking summaries</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="spinnerTipsEnabled">
+      <label for="spinnerTipsEnabled">Show spinner tips</label>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px;font-size:14px;font-weight:600;">Attribution</h3>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="attrCommit">Commit Attribution</label>
+      <input type="text" id="attrCommit" placeholder="Co-authored-by">
+      <div class="hint">Git commit attribution trailer</div>
+    </div>
+    <div class="form-group">
+      <label for="attrPr">PR Attribution</label>
+      <input type="text" id="attrPr" placeholder="Generated message">
+      <div class="hint">Pull request description attribution</div>
+    </div>
+  </div>
+</div>
+
+<!-- === MODEL === -->
+<div class="tab-content" id="tab-model">
+  <h2 class="section-title">Model Configuration</h2>
+  <p class="section-desc">Advanced model settings and available model restrictions</p>
+
+  <div class="form-group">
+    <label for="availableModels">Available Models</label>
+    <div class="array-editor" id="availableModelsEditor">
+      <div class="array-empty">No restrictions — all models available</div>
+    </div>
+    <div class="array-add-row">
+      <input type="text" id="availableModelsInput" placeholder="e.g. sonnet, haiku, opus, or full model ID">
+      <button class="btn btn-secondary" onclick="addArrayItem('availableModels')">Add</button>
+    </div>
+    <div class="hint">Restrict selectable models. Leave empty to allow all.</div>
+  </div>
+
+  <div class="form-row">
+    <div class="checkbox-row">
+      <input type="checkbox" id="fastModePerSessionOptIn">
+      <label for="fastModePerSessionOptIn">Require opt-in to fast mode each session</label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="minimumVersion">Minimum Version</label>
+    <input type="text" id="minimumVersion" placeholder="e.g. 2.1.0">
+    <div class="hint">Prevent auto-updater from downgrading below this version</div>
+  </div>
+</div>
+
+<!-- === PERMISSIONS === -->
+<div class="tab-content" id="tab-permissions">
+  <h2 class="section-title">Permissions</h2>
+  <p class="section-desc">Control which tools Claude can use without prompting</p>
+
+  <div class="form-group">
+    <label for="permDefaultMode">Default Permission Mode</label>
+    <select id="permDefaultMode">
+      <option value="">Default (prompt)</option>
+      <option value="acceptEdits">Accept Edits</option>
+      <option value="dontAsk">Don't Ask (auto-deny)</option>
+      <option value="bypassPermissions">Bypass Permissions (dangerous)</option>
+      <option value="auto">Auto (research preview)</option>
+      <option value="plan">Plan (read-only)</option>
+    </select>
+    <div class="hint">Default mode for permission prompts</div>
+  </div>
+
+  <div class="form-row">
+    <div class="checkbox-row">
+      <input type="checkbox" id="skipDangerousPermPrompt">
+      <label for="skipDangerousPermPrompt">Skip bypass mode confirmation</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="disableBypassPerms">
+      <label for="disableBypassPerms">Disable bypass permissions mode</label>
+    </div>
+  </div>
+
+  <div class="form-group" style="margin-top:20px;">
+    <label>Allowed Tools (auto-approved)</label>
+    <div class="array-editor" id="permAllowEditor">
+      <div class="array-empty">No rules — all tools will prompt</div>
+    </div>
+    <div class="array-add-row">
+      <input type="text" id="permAllowInput" placeholder="e.g. Bash(git *), Read, Edit">
+      <button class="btn btn-secondary" onclick="addPermRule('allow')">Add</button>
+    </div>
+    <div class="rule-presets">
+      <span class="preset-chip" onclick="insertPreset('permAllowInput','Read')">Read</span>
+      <span class="preset-chip" onclick="insertPreset('permAllowInput','Edit')">Edit</span>
+      <span class="preset-chip" onclick="insertPreset('permAllowInput','Write')">Write</span>
+      <span class="preset-chip" onclick="insertPreset('permAllowInput','Bash(git *)')">Bash(git *)</span>
+      <span class="preset-chip" onclick="insertPreset('permAllowInput','Bash(npm *)')">Bash(npm *)</span>
+      <span class="preset-chip" onclick="insertPreset('permAllowInput','Bash(pnpm *)')">Bash(pnpm *)</span>
+      <span class="preset-chip" onclick="insertPreset('permAllowInput','WebSearch')">WebSearch</span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Denied Tools (always blocked)</label>
+    <div class="array-editor" id="permDenyEditor">
+      <div class="array-empty">No denied tools</div>
+    </div>
+    <div class="array-add-row">
+      <input type="text" id="permDenyInput" placeholder="e.g. Bash(rm -rf *)">
+      <button class="btn btn-secondary" onclick="addPermRule('deny')">Add</button>
+    </div>
+    <div class="rule-presets">
+      <span class="preset-chip" onclick="insertPreset('permDenyInput','Bash(rm -rf *)')">Bash(rm -rf *)</span>
+      <span class="preset-chip" onclick="insertPreset('permDenyInput','Bash(sudo *)')">Bash(sudo *)</span>
+      <span class="preset-chip" onclick="insertPreset('permDenyInput','Bash(curl *)')">Bash(curl *)</span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Additional Directories</label>
+    <div class="array-editor" id="additionalDirsEditor">
+      <div class="array-empty">No additional directories</div>
+    </div>
+    <div class="array-add-row">
+      <input type="text" id="additionalDirsInput" placeholder="/path/to/dir">
+      <button class="btn btn-secondary" onclick="addArrayItem('additionalDirs')">Add</button>
+    </div>
+    <div class="hint">Extra directories Claude can access beyond the project root</div>
+  </div>
+
+  <div class="checkbox-row" style="margin-top:16px;">
+    <input type="checkbox" id="disableAutoMode">
+    <label for="disableAutoMode">Disable auto mode entirely</label>
+  </div>
+</div>
+
+<!-- === ENVIRONMENT === -->
+<div class="tab-content" id="tab-env">
+  <h2 class="section-title">Environment Variables</h2>
+  <p class="section-desc">Environment variables injected into every session</p>
+  <div class="hint" style="margin-bottom:16px;">
+    These variables are set in Claude's runtime environment. Use them for API keys, model overrides, feature flags, etc.
+  </div>
+
+  <div id="envEditor" class="kv-editor">
+    <div class="array-empty" id="envEmpty">No environment variables configured</div>
+  </div>
+
+  <div class="array-add-row">
+    <input type="text" id="envKeyInput" placeholder="KEY_NAME" style="flex:0 0 200px;">
+    <input type="text" id="envValInput" placeholder="value">
+    <button class="btn btn-secondary" onclick="addEnvVar()">Add</button>
+  </div>
+  <div class="rule-presets" style="margin-top:8px;">
+    <span class="preset-chip" onclick="insertEnvPreset('EDITOR','code --wait')">EDITOR</span>
+    <span class="preset-chip" onclick="insertEnvPreset('NODE_ENV','development')">NODE_ENV</span>
+    <span class="preset-chip" onclick="insertEnvPreset('ANTHROPIC_MODEL','')">ANTHROPIC_MODEL</span>
+    <span class="preset-chip" onclick="insertEnvPreset('CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC','1')">Disable non-essential</span>
+    <span class="preset-chip" onclick="insertEnvPreset('CLAUDE_CODE_EFFORT_LEVEL','max')">Effort level max</span>
+  </div>
+</div>
+
+<!-- === HOOKS === -->
+<div class="tab-content" id="tab-hooks">
+  <h2 class="section-title">Hooks</h2>
+  <p class="section-desc">Lifecycle hooks that run scripts automatically</p>
+
+  <div class="collapsible open">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3>PreToolUse</h3>
+      <span class="arrow open">&#9654;</span>
+    </div>
+    <div class="collapsible-body open" id="preToolUseBody">
+      <div class="hint" style="margin-bottom:12px;">Commands run before a tool executes</div>
+      <div id="preToolUseEditor"></div>
+      <button class="btn btn-secondary" onclick="addHook('preToolUse')" style="margin-top:10px;">+ Add Hook</button>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3>PostToolUse</h3>
+      <span class="arrow">&#9654;</span>
+    </div>
+    <div class="collapsible-body" id="postToolUseBody">
+      <div class="hint" style="margin-bottom:12px;">Commands run after a tool executes</div>
+      <div id="postToolUseEditor"></div>
+      <button class="btn btn-secondary" onclick="addHook('postToolUse')" style="margin-top:10px;">+ Add Hook</button>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3>Stop</h3>
+      <span class="arrow">&#9654;</span>
+    </div>
+    <div class="collapsible-body" id="stopHooksBody">
+      <div class="hint" style="margin-bottom:12px;">Commands run when session stops</div>
+      <div id="stopHooksEditor"></div>
+      <button class="btn btn-secondary" onclick="addHook('stop')" style="margin-top:10px;">+ Add Hook</button>
+    </div>
+  </div>
+</div>
+
+<!-- === MCP SERVERS === -->
+<div class="tab-content" id="tab-mcp">
+  <h2 class="section-title">MCP Servers</h2>
+  <p class="section-desc">Model Context Protocol server configurations</p>
+
+  <div id="mcpEditor">
+    <div class="array-empty">No MCP servers configured</div>
+  </div>
+
+  <button class="btn btn-secondary" onclick="addMcpServer()" style="margin-top:12px;">+ Add MCP Server</button>
+
+  <div class="collapsible" style="margin-top:20px;">
+    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+      <h3 style="font-size:13px;">Import MCP Config from JSON</h3>
+      <span class="arrow">&#9654;</span>
+    </div>
+    <div class="collapsible-body">
+      <p class="hint" style="margin-bottom:10px;">Paste a JSON snippet containing <code>mcpServers</code> or a single server config. Existing servers with the same name will be overwritten.</p>
+      <textarea id="mcpImportInput" rows="6" style="font-size:12px;" placeholder='{
+  "mcpServers": {
+    "my-server": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-foo"],
+      "env": {
+        "API_KEY": "xxx"
+      }
+    }
+  }
+}'></textarea>
+      <div id="mcpImportStatus" style="font-size:12px;margin-top:6px;color:var(--text2);"></div>
+      <button class="btn btn-secondary" onclick="importMcpConfig()" style="margin-top:8px;">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- === ADVANCED === -->
+<div class="tab-content" id="tab-advanced">
+  <h2 class="section-title">Advanced Settings</h2>
+  <p class="section-desc">Less commonly used configuration options</p>
+
+  <div class="form-row-3">
+    <div class="form-group">
+      <label for="tui">TUI Mode</label>
+      <select id="tui">
+        <option value="">Default</option>
+        <option value="fullscreen">Fullscreen</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="plansDirectory">Plans Directory</label>
+      <input type="text" id="plansDirectory" placeholder="~/.claude/plans">
+    </div>
+    <div class="form-group">
+      <label for="autoMemoryDirectory">Auto Memory Directory</label>
+      <input type="text" id="autoMemoryDirectory" placeholder="Custom path">
+      <div class="hint">Not accepted in project-level settings</div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="checkbox-row">
+      <input type="checkbox" id="awaySummaryEnabled">
+      <label for="awaySummaryEnabled">Generate away summary</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="showClearContextOnPlanAccept">
+      <label for="showClearContextOnPlanAccept">Show clear context on plan accept</label>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="checkbox-row">
+      <input type="checkbox" id="disableSkillShellExecution">
+      <label for="disableSkillShellExecution">Disable shell execution in skills</label>
+    </div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="disableDeepLinkRegistration">
+      <label for="disableDeepLinkRegistration">Disable claude-cli:// protocol handler</label>
+    </div>
+  </div>
+
+  <div class="form-group" style="margin-top:20px;">
+    <label for="feedbackSurveyRate">Feedback Survey Rate (0–1)</label>
+    <input type="number" id="feedbackSurveyRate" min="0" max="1" step="0.1" placeholder="0">
+    <div class="hint">Probability that session quality survey appears when eligible</div>
+  </div>
+
+  <div class="form-group">
+    <label for="prUrlTemplate">PR URL Template</label>
+    <input type="text" id="prUrlTemplate" placeholder="https://github.com/owner/repo/pull/">
+    <div class="hint">URL template for PR badge in commit attribution</div>
+  </div>
+
+  <h3 style="margin-top:28px;font-size:14px;font-weight:600;">Company Announcements</h3>
+  <div class="form-group">
+    <label for="companyAnnouncements">Announcements (one per line)</label>
+    <textarea id="companyAnnouncements" rows="4" placeholder="Enter announcements, one per line..."></textarea>
+    <div class="hint">Custom announcements displayed at startup (cycled randomly)</div>
+  </div>
+
+  <h3 style="margin-top:28px;font-size:14px;font-weight:600;">Auth Helpers</h3>
+  <div class="form-group">
+    <label for="apiKeyHelper">API Key Helper Script</label>
+    <input type="text" id="apiKeyHelper" placeholder="/path/to/script">
+    <div class="hint">Shell script that outputs auth token (sent as X-Api-Key header)</div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="forceLoginMethod">Force Login Method</label>
+      <select id="forceLoginMethod">
+        <option value="">None</option>
+        <option value="claudeai">Claude.ai</option>
+        <option value="console">Console</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="forceLoginOrgUUID">Force Org UUID</label>
+      <input type="text" id="forceLoginOrgUUID" placeholder="UUID or comma-separated UUIDs">
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px;font-size:14px;font-weight:600;">Status Line</h3>
+  <div class="form-group">
+    <label for="statuslineCommand">Status Line Command</label>
+    <input type="text" id="statuslineCommand" placeholder="e.g. bash /path/to/statusline.sh">
+    <div class="hint">Custom status bar displayed in the TUI</div>
+  </div>
+
+  <h3 style="margin-top:28px;font-size:14px;font-weight:600;">Worktree</h3>
+  <div class="form-group">
+    <label for="worktreeSymlinkDirs">Symlink Directories (comma-separated)</label>
+    <input type="text" id="worktreeSymlinkDirs" placeholder="node_modules, vendor">
+    <div class="hint">Directories to symlink from main repo into each worktree</div>
+  </div>
+  <div class="form-group">
+    <label for="worktreeSparsePaths">Sparse Checkout Paths (comma-separated)</label>
+    <input type="text" id="worktreeSparsePaths" placeholder="src/app, packages/core">
+    <div class="hint">Directories to check out via git sparse-checkout</div>
+  </div>
+</div>
+
+<!-- === RAW JSON === -->
+<div class="tab-content" id="tab-raw">
+  <h2 class="section-title">Raw JSON Editor</h2>
+  <p class="section-desc">Directly edit the settings.json file. Changes here override form values.</p>
+
+  <textarea class="json-editor" id="rawJson" spellcheck="false"></textarea>
+  <div class="json-error" id="rawJsonError"></div>
+
+  <div style="margin-top:12px;display:flex;gap:8px;">
+    <button class="btn btn-secondary" onclick="applyRawToForm()">Apply to Form</button>
+    <button class="btn btn-secondary" onclick="formatRawJson()">Format</button>
+  </div>
+</div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// Data
+let settings = {};
+let originalSettings = {};
+
+// Init
+document.addEventListener('DOMContentLoaded', async () => {
+  setupTabs();
+  await loadSettings();
+  setupAutoSave();
+});
+
+function setupTabs() {
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+}
+
+function toggleCollapsible(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.arrow');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+async function loadSettings() {
+  try {
+    const res = await fetch('/api/settings');
+    const result = await res.json();
+    settings = result.data || {};
+    originalSettings = JSON.parse(JSON.stringify(settings));
+
+    document.getElementById('filePath').textContent = result.path.replace(/^\/Users\/[^/]+/, '~');
+    if (result.raw) {
+      document.getElementById('rawJson').value = result.raw.trim();
+    }
+
+    // Show file size
+    if (result.raw) {
+      const size = new Blob([result.raw]).size;
+      document.getElementById('sizeBadge').textContent = size > 1024 ? `${(size/1024).toFixed(1)} KB` : `${size} B`;
+    }
+
+    formFromData();
+    setStatus('loaded', 'Loaded');
+  } catch (e) {
+    setStatus('error', 'Failed to load');
+    showToast('Failed to load settings: ' + e.message, 'error');
+  }
+}
+
+async function saveSettings() {
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  setStatus('saving', 'Saving...');
+
+  try {
+    // Check if we're on the raw JSON tab and it has focus modifications
+    const rawTab = document.getElementById('tab-raw');
+    if (rawTab.classList.contains('active')) {
+      // Use raw JSON
+      const raw = document.getElementById('rawJson').value;
+      settings = JSON.parse(raw);
+    } else {
+      dataToForm();
+    }
+
+    const res = await fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(settings),
+    });
+
+    const result = await res.json();
+    if (result.ok) {
+      originalSettings = JSON.parse(JSON.stringify(settings));
+      document.getElementById('rawJson').value = JSON.stringify(settings, null, 2);
+      setStatus('loaded', 'Saved');
+      showToast('Settings saved successfully!', 'success');
+    } else {
+      throw new Error(result.error || 'Save failed');
+    }
+  } catch (e) {
+    setStatus('error', 'Error: ' + e.message);
+    showToast('Save failed: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setupAutoSave() {
+  // Mark dirty on any form change
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('change', markDirty);
+    el.addEventListener('input', markDirty);
+  });
+}
+
+function markDirty() {
+  if (document.getElementById('statusText').textContent !== 'Unsaved changes') {
+    setStatus('dirty', 'Unsaved changes');
+  }
+}
+
+function setStatus(type, text) {
+  const dot = document.getElementById('statusDot');
+  const label = document.getElementById('statusText');
+  dot.className = 'status-dot ' + type;
+  label.textContent = text;
+}
+
+// === FORM BINDING ===
+
+function formFromData() {
+  const s = settings;
+
+  // General
+  setVal('model', s.model || '');
+  setVal('language', s.language || 'english');
+  setVal('agent', s.agent || '');
+  setVal('defaultShell', s.defaultShell || 'bash');
+  setVal('autoUpdatesChannel', s.autoUpdatesChannel || 'latest');
+  setVal('cleanupPeriodDays', s.cleanupPeriodDays ?? '');
+  setVal('viewMode', s.viewMode || '');
+  setVal('alwaysThinkingEnabled', !!s.alwaysThinkingEnabled);
+  setVal('skipWebFetchPreflight', !!s.skipWebFetchPreflight);
+  setVal('includeGitInstructions', s.includeGitInstructions !== false);
+  setVal('showTurnDuration', !!s.showTurnDuration);
+  setVal('showThinkingSummaries', !!s.showThinkingSummaries);
+  setVal('spinnerTipsEnabled', s.spinnerTipsEnabled !== false);
+  setVal('attrCommit', s.attribution?.commit || '');
+  setVal('attrPr', s.attribution?.pr || '');
+
+  // Model
+  setVal('availableModels', s.availableModels || []);
+  renderArray('availableModels', s.availableModels || []);
+  setVal('fastModePerSessionOptIn', !!s.fastModePerSessionOptIn);
+  setVal('minimumVersion', s.minimumVersion || '');
+
+  // Permissions
+  const p = s.permissions || {};
+  setVal('permDefaultMode', p.defaultMode || '');
+  setVal('skipDangerousPermPrompt', !!p.skipDangerousModePermissionPrompt);
+  setVal('disableBypassPerms', p.disableBypassPermissionsMode === 'disable');
+  setVal('disableAutoMode', s.disableAutoMode === 'disable');
+  renderPermArray('allow', p.allow || []);
+  renderPermArray('deny', p.deny || []);
+  renderArray('additionalDirs', p.additionalDirectories || []);
+
+  // Environment
+  renderEnv(s.env || {});
+
+  // Hooks
+  const hooks = s.hooks || {};
+  renderHooks('preToolUse', hooks.PreToolUse || []);
+  renderHooks('postToolUse', hooks.PostToolUse || []);
+  renderHooks('stop', hooks.Stop || []);
+
+  // MCP
+  renderMcp(s.mcpServers || {});
+
+  // Advanced
+  setVal('tui', s.tui || '');
+  setVal('plansDirectory', s.plansDirectory || '');
+  setVal('autoMemoryDirectory', s.autoMemoryDirectory || '');
+  setVal('awaySummaryEnabled', s.awaySummaryEnabled !== false);
+  setVal('showClearContextOnPlanAccept', !!s.showClearContextOnPlanAccept);
+  setVal('disableSkillShellExecution', !!s.disableSkillShellExecution);
+  setVal('disableDeepLinkRegistration', s.disableDeepLinkRegistration === 'disable');
+  setVal('feedbackSurveyRate', s.feedbackSurveyRate ?? '');
+  setVal('prUrlTemplate', s.prUrlTemplate || '');
+  setVal('companyAnnouncements', (s.companyAnnouncements || []).join('\n'));
+  setVal('apiKeyHelper', s.apiKeyHelper || '');
+  setVal('forceLoginMethod', s.forceLoginMethod || '');
+  setVal('forceLoginOrgUUID', s.forceLoginOrgUUID || '');
+  setVal('statuslineCommand', s.statusLine?.command || '');
+  setVal('worktreeSymlinkDirs', (s.worktree?.symlinkDirectories || []).join(', '));
+  setVal('worktreeSparsePaths', (s.worktree?.sparsePaths || []).join(', '));
+}
+
+function dataToForm() {
+  const s = {};
+
+  // General
+  setData(s, 'model', 'model');
+  setData(s, 'language', 'language');
+  setData(s, 'agent', 'agent');
+  setData(s, 'defaultShell', 'defaultShell');
+  setData(s, 'autoUpdatesChannel', 'autoUpdatesChannel');
+  setData(s, 'cleanupPeriodDays', 'cleanupPeriodDays', 'number');
+  setData(s, 'viewMode', 'viewMode');
+  setData(s, 'alwaysThinkingEnabled', 'alwaysThinkingEnabled', 'bool');
+  setData(s, 'skipWebFetchPreflight', 'skipWebFetchPreflight', 'bool');
+  if (!getVal('includeGitInstructions')) s.includeGitInstructions = false;
+  setData(s, 'showTurnDuration', 'showTurnDuration', 'bool');
+  setData(s, 'showThinkingSummaries', 'showThinkingSummaries', 'bool');
+  if (!getVal('spinnerTipsEnabled')) s.spinnerTipsEnabled = false;
+
+  // Attribution
+  const attrCommit = getVal('attrCommit');
+  const attrPr = getVal('attrPr');
+  if (attrCommit || attrPr) {
+    s.attribution = {};
+    if (attrCommit) s.attribution.commit = attrCommit;
+    if (attrPr) s.attribution.pr = attrPr;
+  }
+
+  // Model
+  const availModels = collectArray('availableModels');
+  if (availModels.length > 0) s.availableModels = availModels;
+  setData(s, 'fastModePerSessionOptIn', 'fastModePerSessionOptIn', 'bool');
+  setData(s, 'minimumVersion', 'minimumVersion');
+
+  // Permissions
+  const p = {};
+  const allow = collectArray('allow');
+  const deny = collectArray('deny');
+  const addDirs = collectArray('additionalDirs');
+  if (allow.length > 0) p.allow = allow;
+  if (deny.length > 0) p.deny = deny;
+  if (addDirs.length > 0) p.additionalDirectories = addDirs;
+  const defaultMode = getVal('permDefaultMode');
+  if (defaultMode) p.defaultMode = defaultMode;
+  if (getVal('skipDangerousPermPrompt')) p.skipDangerousModePermissionPrompt = true;
+  if (getVal('disableBypassPerms')) p.disableBypassPermissionsMode = 'disable';
+  if (Object.keys(p).length > 0) s.permissions = p;
+
+  // Disable auto mode
+  if (getVal('disableAutoMode')) s.disableAutoMode = 'disable';
+
+  // Environment
+  const env = collectEnv();
+  if (Object.keys(env).length > 0) s.env = env;
+
+  // Hooks
+  const preToolUse = collectHooks('preToolUse');
+  const postToolUse = collectHooks('postToolUse');
+  const stop = collectHooks('stop');
+  const hooks = {};
+  if (preToolUse.length > 0) hooks.PreToolUse = preToolUse;
+  if (postToolUse.length > 0) hooks.PostToolUse = postToolUse;
+  if (stop.length > 0) hooks.Stop = stop;
+  if (Object.keys(hooks).length > 0) s.hooks = hooks;
+
+  // MCP
+  const mcp = collectMcp();
+  if (Object.keys(mcp).length > 0) s.mcpServers = mcp;
+
+  // Advanced
+  setData(s, 'tui', 'tui');
+  setData(s, 'plansDirectory', 'plansDirectory');
+  setData(s, 'autoMemoryDirectory', 'autoMemoryDirectory');
+  if (!getVal('awaySummaryEnabled')) s.awaySummaryEnabled = false;
+  setData(s, 'showClearContextOnPlanAccept', 'showClearContextOnPlanAccept', 'bool');
+  setData(s, 'disableSkillShellExecution', 'disableSkillShellExecution', 'bool');
+  if (getVal('disableDeepLinkRegistration')) s.disableDeepLinkRegistration = 'disable';
+  setData(s, 'feedbackSurveyRate', 'feedbackSurveyRate', 'number');
+  setData(s, 'prUrlTemplate', 'prUrlTemplate');
+
+  const announcements = getVal('companyAnnouncements');
+  if (announcements.trim()) {
+    s.companyAnnouncements = announcements.split('\n').map(l => l.trim()).filter(Boolean);
+  }
+
+  setData(s, 'apiKeyHelper', 'apiKeyHelper');
+  setData(s, 'forceLoginMethod', 'forceLoginMethod');
+  setData(s, 'forceLoginOrgUUID', 'forceLoginOrgUUID');
+
+  const stCmd = getVal('statuslineCommand');
+  if (stCmd) s.statusLine = { type: 'command', command: stCmd };
+
+  const symDirs = getVal('worktreeSymlinkDirs');
+  const sparsePaths = getVal('worktreeSparsePaths');
+  if (symDirs || sparsePaths) {
+    s.worktree = {};
+    if (symDirs) s.worktree.symlinkDirectories = symDirs.split(',').map(s => s.trim()).filter(Boolean);
+    if (sparsePaths) s.worktree.sparsePaths = sparsePaths.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  settings = s;
+}
+
+// === HELPERS ===
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.type === 'checkbox') {
+    el.checked = !!val;
+  } else {
+    el.value = val !== null && val !== undefined ? String(val) : '';
+  }
+}
+
+function getVal(id) {
+  const el = document.getElementById(id);
+  if (!el) return undefined;
+  if (el.type === 'checkbox') return el.checked;
+  if (el.type === 'number') return el.value === '' ? undefined : Number(el.value);
+  return el.value;
+}
+
+function setData(obj, key, id, type) {
+  const v = getVal(id);
+  if (v === undefined || v === '' || v === false || v === null) return;
+  if (type === 'number') obj[key] = Number(v);
+  else if (type === 'bool') obj[key] = true;
+  else obj[key] = v;
+}
+
+// === ARRAY EDITOR ===
+
+function renderArray(id, items, containerId) {
+  const container = document.getElementById((containerId || id) + 'Editor');
+  if (!container) return;
+  if (!items || items.length === 0) {
+    container.innerHTML = '<div class="array-empty">No items</div>';
+    return;
+  }
+  container.innerHTML = items.map((item, i) =>
+    `<div class="array-item">
+      <span class="rule-text">${escHtml(item)}</span>
+      <button class="remove-btn" onclick="removeArrayItem('${id}', ${i})">&times;</button>
+    </div>`
+  ).join('');
+}
+
+function addArrayItem(id) {
+  const input = document.getElementById(id + 'Input');
+  const val = input.value.trim();
+  if (!val) return;
+  const arr = settings[id] || [];
+  arr.push(val);
+  settings[id] = arr;
+  renderArray(id, arr);
+  input.value = '';
+  markDirty();
+}
+
+function removeArrayItem(id, idx) {
+  let arr = settings[id] || [];
+  arr = arr.filter((_, i) => i !== idx);
+  settings[id] = arr.length > 0 ? arr : undefined;
+  renderArray(id, arr);
+  markDirty();
+}
+
+function collectArray(id) {
+  // Collects from current settings array state, NOT from DOM
+  // Used for permission arrays which have separate storage
+  return settings[id] || [];
+}
+
+// === PERMISSION EDITOR ===
+
+function renderPermArray(type, items) {
+  renderArray(type, items, 'perm' + type.charAt(0).toUpperCase() + type.slice(1));
+  // Also store in settings for serialization
+  const p = settings.permissions || {};
+  if (items.length > 0) p[type] = items;
+  else delete p[type];
+  if (Object.keys(p).length > 0) settings.permissions = p;
+  else delete settings.permissions;
+}
+
+function addPermRule(type) {
+  const input = document.getElementById('perm' + type.charAt(0).toUpperCase() + type.slice(1) + 'Input');
+  const val = input.value.trim();
+  if (!val) return;
+  const p = settings.permissions || {};
+  const arr = p[type] || [];
+  arr.push(val);
+  p[type] = arr;
+  settings.permissions = p;
+  renderPermArray(type, arr);
+  input.value = '';
+  markDirty();
+}
+
+function removePermRule(type, idx) {
+  const p = settings.permissions || {};
+  let arr = p[type] || [];
+  arr = arr.filter((_, i) => i !== idx);
+  if (arr.length > 0) p[type] = arr;
+  else delete p[type];
+  settings.permissions = Object.keys(p).length > 0 ? p : undefined;
+  renderPermArray(type, arr);
+  markDirty();
+}
+
+// Override removeArrayItem for permission arrays
+const _origRemoveArrayItem = removeArrayItem;
+removeArrayItem = function(id, idx) {
+  if (id === 'allow' || id === 'deny') {
+    removePermRule(id, idx);
+    return;
+  }
+  if (id === 'additionalDirs') {
+    const p = settings.permissions || {};
+    let arr = p.additionalDirectories || [];
+    arr = arr.filter((_, i) => i !== idx);
+    if (arr.length > 0) p.additionalDirectories = arr;
+    else delete p.additionalDirectories;
+    settings.permissions = Object.keys(p).length > 0 ? p : undefined;
+    renderArray(id, arr);
+    markDirty();
+    return;
+  }
+  _origRemoveArrayItem(id, idx);
+};
+
+function insertPreset(inputId, val) {
+  const input = document.getElementById(inputId);
+  input.value = val;
+  input.focus();
+}
+
+// === ENV EDITOR ===
+
+function renderEnv(env) {
+  const editor = document.getElementById('envEditor');
+  const keys = Object.keys(env);
+  if (keys.length === 0) {
+    editor.innerHTML = '<div class="array-empty" id="envEmpty">No environment variables configured</div>';
+    return;
+  }
+  editor.innerHTML = keys.map((k, i) =>
+    `<div class="kv-row">
+      <input type="text" value="${escHtml(k)}" onchange="updateEnvKey(${i}, this.value)" placeholder="KEY">
+      <input type="text" value="${escHtml(env[k])}" onchange="updateEnvVal(${i}, this.value)" placeholder="value">
+      <button class="remove-btn" onclick="removeEnvVar(${i})">&times;</button>
+    </div>`
+  ).join('');
+  document.getElementById('envEmpty')?.remove();
+}
+
+function addEnvVar() {
+  const k = document.getElementById('envKeyInput').value.trim();
+  const v = document.getElementById('envValInput').value;
+  if (!k) return;
+  const env = settings.env || {};
+  env[k] = v;
+  settings.env = env;
+  renderEnv(env);
+  document.getElementById('envKeyInput').value = '';
+  document.getElementById('envValInput').value = '';
+  markDirty();
+}
+
+function removeEnvVar(idx) {
+  const env = settings.env || {};
+  const keys = Object.keys(env);
+  delete env[keys[idx]];
+  settings.env = Object.keys(env).length > 0 ? env : undefined;
+  renderEnv(env);
+  markDirty();
+}
+
+function updateEnvKey(idx, newKey) {
+  const env = settings.env || {};
+  const keys = Object.keys(env);
+  const val = env[keys[idx]];
+  delete env[keys[idx]];
+  if (newKey) env[newKey] = val;
+  settings.env = Object.keys(env).length > 0 ? env : undefined;
+  renderEnv(env);
+  markDirty();
+}
+
+function updateEnvVal(idx, newVal) {
+  const env = settings.env || {};
+  const keys = Object.keys(env);
+  env[keys[idx]] = newVal;
+  renderEnv(env);
+  markDirty();
+}
+
+function collectEnv() {
+  const editor = document.getElementById('envEditor');
+  const rows = editor.querySelectorAll('.kv-row');
+  const env = {};
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const k = inputs[0].value.trim();
+    if (k) env[k] = inputs[1].value;
+  });
+  return env;
+}
+
+function insertEnvPreset(key, val) {
+  document.getElementById('envKeyInput').value = key;
+  document.getElementById('envValInput').value = val;
+}
+
+// === HOOKS EDITOR ===
+
+function renderHooks(type, hooks) {
+  const editor = document.getElementById(type + 'HooksEditor') || document.getElementById(type + 'Editor');
+  if (!editor) return;
+  if (!hooks || hooks.length === 0) {
+    editor.innerHTML = '<div class="array-empty">No hooks configured</div>';
+    return;
+  }
+  editor.innerHTML = hooks.map((hook, i) =>
+    `<div class="object-item">
+      <div class="object-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span style="color:var(--text2);font-size:12px;font-family:var(--mono)">#${i + 1}</span>
+        <span style="flex:1;font-size:12px;color:var(--text2);font-family:var(--mono)">${escHtml(hook.matcher || hook.command || '(empty)')}</span>
+        <button class="remove-btn" onclick="event.stopPropagation();removeHook('${type}', ${i})">&times;</button>
+      </div>
+      <div class="object-body open">
+        <div class="form-group">
+          <label>Matcher</label>
+          <input type="text" value="${escHtml(hook.matcher || '')}" onchange="updateHookField('${type}', ${i}, 'matcher', this.value)" placeholder="e.g. Write">
+        </div>
+        <div class="form-group">
+          <label>Command</label>
+          <input type="text" value="${escHtml(hook.command || '')}" onchange="updateHookField('${type}', ${i}, 'command', this.value)" placeholder="e.g. npx prettier --write \$FILEPATH">
+        </div>
+        <div class="form-group">
+          <label>Timeout (ms)</label>
+          <input type="number" value="${hook.timeout || 5000}" onchange="updateHookField('${type}', ${i}, 'timeout', this.value)" placeholder="5000">
+        </div>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function addHook(type) {
+  const storeKey = type === 'preToolUse' ? 'PreToolUse' : type === 'postToolUse' ? 'PostToolUse' : 'Stop';
+  const hooks = settings.hooks || {};
+  const arr = hooks[storeKey] || [];
+  arr.push({ matcher: '', command: '', timeout: 5000 });
+  hooks[storeKey] = arr;
+  settings.hooks = hooks;
+  renderHooks(type, arr);
+  markDirty();
+}
+
+function removeHook(type, idx) {
+  const storeKey = type === 'preToolUse' ? 'PreToolUse' : type === 'postToolUse' ? 'PostToolUse' : 'Stop';
+  const hooks = settings.hooks || {};
+  let arr = hooks[storeKey] || [];
+  arr = arr.filter((_, i) => i !== idx);
+  if (arr.length > 0) hooks[storeKey] = arr;
+  else delete hooks[storeKey];
+  settings.hooks = Object.keys(hooks).length > 0 ? hooks : undefined;
+  renderHooks(type, arr);
+  markDirty();
+}
+
+function updateHookField(type, idx, field, val) {
+  const storeKey = type === 'preToolUse' ? 'PreToolUse' : type === 'postToolUse' ? 'PostToolUse' : 'Stop';
+  const hooks = settings.hooks || {};
+  const arr = hooks[storeKey] || [];
+  if (!arr[idx]) return;
+  if (field === 'timeout') arr[idx][field] = parseInt(val) || 5000;
+  else arr[idx][field] = val;
+  renderHooks(type, arr);
+  markDirty();
+}
+
+function collectHooks(type) {
+  const storeKey = type === 'preToolUse' ? 'PreToolUse' : type === 'postToolUse' ? 'PostToolUse' : 'Stop';
+  const hooks = settings.hooks || {};
+  return hooks[storeKey] || [];
+}
+
+// === MCP EDITOR ===
+
+function renderMcp(servers) {
+  const editor = document.getElementById('mcpEditor');
+  const keys = Object.keys(servers);
+  if (keys.length === 0) {
+    editor.innerHTML = '<div class="array-empty">No MCP servers configured</div>';
+    return;
+  }
+  editor.innerHTML = keys.map((name, i) => {
+    const srv = servers[name];
+    return `<div class="object-item">
+      <div class="object-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <input class="key-input" value="${escHtml(name)}" onchange="updateMcpKey(${i}, this.value)" onclick="event.stopPropagation()" placeholder="Server name">
+        <button class="remove-btn" onclick="event.stopPropagation();removeMcpServer(${i})">&times;</button>
+      </div>
+      <div class="object-body open">
+        <div class="form-group">
+          <label>Command</label>
+          <input type="text" value="${escHtml(srv.command || '')}" onchange="updateMcpField(${i}, 'command', this.value)" placeholder="npx">
+        </div>
+        <div class="form-group">
+          <label>Arguments (one per line)</label>
+          <textarea rows="3" onchange="updateMcpArgs(${i}, this.value)" placeholder="-y&#10;@modelcontextprotocol/server-memory">${escHtml((srv.args || []).join('\n'))}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Environment Variables (JSON)</label>
+          <textarea rows="2" onchange="updateMcpEnv(${i}, this.value)" placeholder='{"API_KEY":"..."}'>${srv.env ? JSON.stringify(srv.env, null, 2) : ''}</textarea>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addMcpServer() {
+  const servers = settings.mcpServers || {};
+  const name = 'server-' + (Object.keys(servers).length + 1);
+  servers[name] = { command: '', args: [] };
+  settings.mcpServers = servers;
+  renderMcp(servers);
+  markDirty();
+}
+
+function removeMcpServer(idx) {
+  const servers = settings.mcpServers || {};
+  const keys = Object.keys(servers);
+  delete servers[keys[idx]];
+  settings.mcpServers = Object.keys(servers).length > 0 ? servers : undefined;
+  renderMcp(servers);
+  markDirty();
+}
+
+function updateMcpKey(idx, newKey) {
+  const servers = settings.mcpServers || {};
+  const keys = Object.keys(servers);
+  if (newKey && newKey !== keys[idx]) {
+    servers[newKey] = servers[keys[idx]];
+    delete servers[keys[idx]];
+  }
+  renderMcp(servers);
+  markDirty();
+}
+
+function updateMcpField(idx, field, val) {
+  const servers = settings.mcpServers || {};
+  const keys = Object.keys(servers);
+  if (!servers[keys[idx]]) servers[keys[idx]] = {};
+  servers[keys[idx]][field] = val;
+  markDirty();
+}
+
+function updateMcpArgs(idx, val) {
+  const servers = settings.mcpServers || {};
+  const keys = Object.keys(servers);
+  if (!servers[keys[idx]]) servers[keys[idx]] = {};
+  servers[keys[idx]].args = val.split('\n').map(s => s.trim()).filter(Boolean);
+  markDirty();
+}
+
+function updateMcpEnv(idx, val) {
+  const servers = settings.mcpServers || {};
+  const keys = Object.keys(servers);
+  if (!servers[keys[idx]]) servers[keys[idx]] = {};
+  try {
+    servers[keys[idx]].env = val.trim() ? JSON.parse(val) : undefined;
+  } catch {}
+  markDirty();
+}
+
+function collectMcp() {
+  return settings.mcpServers || {};
+}
+
+function importMcpConfig() {
+  const raw = document.getElementById('mcpImportInput').value.trim();
+  const statusEl = document.getElementById('mcpImportStatus');
+  if (!raw) { statusEl.textContent = 'Paste some JSON first.'; return; }
+
+  let parsed;
+  try { parsed = JSON.parse(raw); }
+  catch (e) { statusEl.textContent = 'Invalid JSON: ' + e.message; return; }
+
+  // Support: {"mcpServers": {...}}, {"serverName": {...}}, or {...} directly as a server entry
+  let imported = {};
+  if (parsed.mcpServers && typeof parsed.mcpServers === 'object') {
+    imported = parsed.mcpServers;
+  } else {
+    // Check if keys look like server entries (each has command/args/env etc.)
+    const keys = Object.keys(parsed);
+    let validCount = 0;
+    for (const k of keys) {
+      if (parsed[k] && typeof parsed[k] === 'object' && parsed[k].command) validCount++;
+    }
+    if (validCount > 0 && validCount === keys.length) {
+      // All top-level keys look like server entries
+      imported = parsed;
+    } else {
+      // Try treating the whole thing as a single server config
+      // Only if it has a "command" field
+      if (parsed.command) {
+        // No name key — use generate one
+        imported['imported-server'] = parsed;
+      } else {
+        statusEl.textContent = 'Cannot detect MCP server config in the provided JSON. Make sure it has "mcpServers" or server entries with "command".';
+        return;
+      }
+    }
+  }
+
+  const servers = settings.mcpServers || {};
+  const existing = Object.keys(servers);
+  const incoming = Object.keys(imported);
+  const overlap = incoming.filter(k => existing.includes(k));
+
+  if (overlap.length > 0) {
+    if (!confirm('Server(s) already exist: ' + overlap.join(', ') + '. Overwrite?')) {
+      statusEl.textContent = 'Import cancelled.';
+      return;
+    }
+  }
+
+  Object.assign(servers, imported);
+  settings.mcpServers = servers;
+  renderMcp(servers);
+  document.getElementById('mcpImportInput').value = '';
+  statusEl.textContent = 'Imported ' + incoming.length + ' server(s): ' + incoming.join(', ');
+  markDirty();
+}
+
+// === RAW JSON ===
+
+function applyRawToForm() {
+  try {
+    const raw = document.getElementById('rawJson').value;
+    const parsed = JSON.parse(raw);
+    settings = parsed;
+    document.getElementById('rawJsonError').textContent = '';
+    formFromData();
+    markDirty();
+    showToast('Applied raw JSON to form', 'success');
+  } catch (e) {
+    document.getElementById('rawJsonError').textContent = 'Invalid JSON: ' + e.message;
+  }
+}
+
+function formatRawJson() {
+  try {
+    const raw = document.getElementById('rawJson').value;
+    const parsed = JSON.parse(raw);
+    document.getElementById('rawJson').value = JSON.stringify(parsed, null, 2);
+    document.getElementById('rawJsonError').textContent = '';
+  } catch (e) {
+    document.getElementById('rawJsonError').textContent = 'Invalid JSON: ' + e.message;
+  }
+}
+
+// === TOAST ===
+
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast toast-' + type + ' show';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// === UTILS ===
+
+function escHtml(s) {
+  if (typeof s !== 'string') return '';
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+</script>
+
+</body>
+</html>
