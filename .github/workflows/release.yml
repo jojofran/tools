@@ -19,14 +19,10 @@ jobs:
       - name: Install dependencies
         working-directory: claude-settings-ui
         run: npm ci
-        env:
-          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
 
       - name: Build
         working-directory: claude-settings-ui
         run: npm run dist
-        env:
-          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
 
       - name: Release
         uses: softprops/action-gh-release@v2
