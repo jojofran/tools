@@ -1,9 +1,0 @@
-#!/bin/bash
-# Self-contained launcher - all files are inside the .app bundle
-cd "$(dirname "$0")/../Resources" || exit 1
-node server.js &
-SERVER_PID=$!
-sleep 1
-open "http://localhost:4177"
-# Wait, then clean up
-wait $SERVER_PID
