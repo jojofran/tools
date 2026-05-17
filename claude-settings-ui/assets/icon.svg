@@ -4,64 +4,42 @@
       <stop offset="0%" stop-color="#6B4BFF"/>
       <stop offset="100%" stop-color="#8B6BFF"/>
     </linearGradient>
-    <linearGradient id="bgLight" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#E8E2FF"/>
-      <stop offset="100%" stop-color="#D4C8FF"/>
-    </linearGradient>
     <clipPath id="roundedSquare">
       <rect width="512" height="512" rx="112"/>
     </clipPath>
   </defs>
 
-  <!-- macOS-style rounded square background -->
+  <!-- Background -->
   <rect width="512" height="512" rx="112" fill="url(#bg)"/>
 
-  <!-- Tool 1: Settings gear (top-right) -->
-  <g transform="translate(280, 160)">
-    <!-- Gear outer ring -->
-    <circle cx="0" cy="0" r="64" fill="white" opacity="0.15"/>
-    <circle cx="0" cy="0" r="48" fill="none" stroke="white" stroke-width="8" opacity="0.3"/>
-    <!-- Gear teeth -->
-    <g stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.4">
-      <line x1="0" y1="-74" x2="0" y2="-60"/>
-      <line x1="0" y1="60" x2="0" y2="74"/>
-      <line x1="-74" y1="0" x2="-60" y2="0"/>
-      <line x1="60" y1="0" x2="74" y2="0"/>
-      <line x1="-52" y1="-52" x2="-42" y2="-42"/>
-      <line x1="42" y1="42" x2="52" y2="52"/>
-      <line x1="52" y1="-52" x2="42" y2="-42"/>
-      <line x1="-42" y1="42" x2="-52" y2="52"/>
-    </g>
-    <!-- Gear center -->
-    <circle cx="0" cy="0" r="32" fill="white" opacity="0.9"/>
-    <circle cx="0" cy="0" r="20" fill="#6B4BFF"/>
-    <circle cx="0" cy="0" r="10" fill="white" opacity="0.8"/>
+  <!-- Gear outer ring -->
+  <circle cx="256" cy="256" r="100" fill="none" stroke="white" stroke-width="4" opacity="0.15"/>
+
+  <!-- Gear teeth -->
+  <g stroke="white" stroke-width="14" stroke-linecap="round" opacity="0.35">
+    <line x1="256" y1="128" x2="256" y2="148"/>
+    <line x1="256" y1="364" x2="256" y2="384"/>
+    <line x1="128" y1="256" x2="148" y2="256"/>
+    <line x1="364" y1="256" x2="384" y2="256"/>
+    <line x1="165" y1="165" x2="179" y2="179"/>
+    <line x1="333" y1="333" x2="347" y2="347"/>
+    <line x1="347" y1="165" x2="333" y2="179"/>
+    <line x1="179" y1="333" x2="165" y2="347"/>
   </g>
 
-  <!-- Tool 2: Connection/node (bottom-left) -->
-  <g transform="translate(200, 330)">
-    <!-- Outer glow -->
-    <circle cx="0" cy="0" r="56" fill="white" opacity="0.1"/>
-    <!-- Connection node -->
-    <circle cx="0" cy="0" r="40" fill="white" opacity="0.9"/>
-    <circle cx="0" cy="0" r="28" fill="none" stroke="#6B4BFF" stroke-width="5" opacity="0.2"/>
-    <!-- Node inner -->
-    <circle cx="0" cy="0" r="18" fill="#6B4BFF" opacity="0.8"/>
-    <!-- Connection dots -->
-    <circle cx="-22" cy="-22" r="6" fill="white" opacity="0.6"/>
-    <circle cx="22" cy="-18" r="4" fill="white" opacity="0.4"/>
-    <circle cx="-18" cy="22" r="4" fill="white" opacity="0.4"/>
-    <circle cx="18" cy="22" r="5" fill="white" opacity="0.5"/>
-    <!-- Connection lines -->
-    <line x1="-14" y1="-14" x2="-22" y2="-22" stroke="white" stroke-width="3" stroke-opacity="0.5" stroke-linecap="round"/>
-    <line x1="14" y1="-12" x2="22" y2="-18" stroke="white" stroke-width="2.5" stroke-opacity="0.35" stroke-linecap="round"/>
-    <line x1="-12" y1="14" x2="-18" y2="22" stroke="white" stroke-width="2.5" stroke-opacity="0.35" stroke-linecap="round"/>
-    <line x1="12" y1="14" x2="18" y2="22" stroke="white" stroke-width="3" stroke-opacity="0.5" stroke-linecap="round"/>
-    <!-- Center dot -->
-    <circle cx="0" cy="0" r="6" fill="white"/>
-  </g>
+  <!-- Gear main circle -->
+  <circle cx="256" cy="256" r="80" fill="white" opacity="0.95"/>
 
-  <!-- Connection arc between the two tools -->
-  <path d="M 240 200 Q 280 260 230 300" stroke="white" stroke-width="4" fill="none" stroke-opacity="0.2" stroke-linecap="round"/>
-  <path d="M 250 190 Q 290 250 240 290" stroke="white" stroke-width="2" fill="none" stroke-opacity="0.15" stroke-linecap="round"/>
+  <!-- Gear inner -->
+  <circle cx="256" cy="256" r="55" fill="none" stroke="url(#bg)" stroke-width="6" opacity="0.3"/>
+  <circle cx="256" cy="256" r="36" fill="url(#bg)"/>
+
+  <!-- Center dot -->
+  <circle cx="256" cy="256" r="12" fill="white" opacity="0.9"/>
+
+  <!-- Wrench/spanner accent -->
+  <g transform="translate(256, 256) rotate(-30)">
+    <rect x="-4" y="-50" width="8" height="40" rx="4" fill="white" opacity="0.4" transform="translate(-20, -10)"/>
+    <rect x="-4" y="-50" width="8" height="40" rx="4" fill="white" opacity="0.4" transform="translate(20, -10)"/>
+  </g>
 </svg>
