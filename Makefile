@@ -60,11 +60,11 @@ electron-cc-config:                                        ## Launch cc-connect-
 build: build-claude-settings build-cc-config               ## Build all distributables
 
 .PHONY: build-claude-settings
-build-claude-settings:                                     ## Build claude-settings-ui DMG+ZIP
+build-claude-settings:                                     ## Build claude-settings-ui .app
 	cd $(CLAUDESETTINGS_FOLDER) && npm run dist
 
 .PHONY: build-cc-config
-build-cc-config:                                           ## Build cc-connect-config-ui DMG+ZIP
+build-cc-config:                                           ## Build cc-connect-config-ui .app
 	cd $(CCCONFIG_FOLDER) && npm run dist
 
 # ──────────────────────────────────────────────
